@@ -1,11 +1,15 @@
 package com.codepath.android.lollipopexercise.activities;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import com.codepath.android.lollipopexercise.R;
 import com.codepath.android.lollipopexercise.adapters.ContactsAdapter;
@@ -18,6 +22,8 @@ public class ContactsActivity extends AppCompatActivity {
     private RecyclerView rvContacts;
     private ContactsAdapter mAdapter;
     private List<Contact> contacts;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +51,46 @@ public class ContactsActivity extends AppCompatActivity {
 
         // Bind adapter to list
         rvContacts.setAdapter(mAdapter);
+
+        View.OnClickListener onClickListen = new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                // Do something here
+
+            }
+        };
+
+
+
+
+
     }
+
+
+    public void onComposeAction(MenuItem mi){
+        Contact newContact = Contact.getRandomContact(ContactsActivity.this);
+        contacts.add(0,newContact);
+        mAdapter.notifyItemInserted(0);
+        rvContacts.scrollToPosition(0);
+
+
+        View.OnClickListener onClickRemove = new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                contacts.remove(0);
+                mAdapter.notifyItemRemoved(0);
+                rvContacts.scrollToPosition(0);
+            }
+        };
+
+         // Pass in the click listener when displaying the Snackbar
+         Snackbar.make(rvContacts, R.string.undo, Snackbar.LENGTH_LONG)
+            .setAction(R.string.undo, onClickRemove).setActionTextColor(ContextCompat.getColor(ContactsActivity.this, R.color.accent))
+            .show(); // Don’t forget to show!
+    }
+
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
